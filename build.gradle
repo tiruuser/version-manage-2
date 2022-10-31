@@ -5,21 +5,7 @@ plugins {
 	id 'de.undercouch.download' version '5.2.1'
 	id 'com.jfrog.artifactory' version '4.29.2'
 }
-//buildscript {
-//	repositories {
-//		//jcenter()
-//		mavenCentral()
-//		maven {
-//			url = 'https://plugins.gradle.org/m2/'
-//		}
-//
-//	}
-//	dependencies {
-//		//Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
-//		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
-//		classpath "de.undercouch:gradle-download-task:5.3.0"
-//	}
-//}
+
 
 
 group = 'vr-manage'
@@ -53,23 +39,31 @@ repositories
 						}
 			}
 		}
-//task downloadFile(type: Download){
-//    src 'https://triveja.jfrog.io/artifactory/test-gradle-dev-local/vr-properties.txt'
-//    dest buildDir
-//}
-tasks.register('downloadFile',Download){
 
-		println 'A message which is logged at QUIET level'
-		src 'https://triveja.jfrog.io/artifactory/test-gradle-dev-local/vr-properties.txt'
-		dest new File(buildDir, 'version-mng/version-manage.txt')
-		println 'After task DownloadFile'
+tasks.register('downloadFile',Download){
+		src 'https://triveja.jfrog.io/artifactory/test-gradle-dev-local/vr-prop.properties'
+		dest new File(buildDir, 'version-mng/version-manage-prop.properties')
+	println 'after download task'
+}
+
+task useDownloadedFile(){
+	dependsOn downloadFile
+	def props=new Properties()
+	var file=file("build/version-mng/version-manage-prop.properties")
+	if(file.exists()) {
+	file.withInputStream { props.load(it) }
+	println props.getProperty("p1var.name.value")
+	println props.getProperty("p2var")
+	dependencies {
+		testImplementation "org.junit.jupiter:junit-jupiter-api:${props.getProperty("junit-jupiter-api")}"
+	}
+}
 
 }
-defaultTasks 'downloadFile'
 
-//def downloadFileTask=tasks.register('downloadFile',Download){
-//		println 'A message which is logged at QUIET level'
-//		src 'https://triveja.jfrog.io/artifactory/test-gradle-dev/vr-properties.txt'
-//		dest new File(buildDir, 'version-mng/version-manage.txt')
-//}
-//downloadFileTask;
+
+
+
+
+
+

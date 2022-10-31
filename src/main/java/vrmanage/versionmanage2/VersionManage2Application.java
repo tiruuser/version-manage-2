@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class VersionManage2Application {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(VersionManage2Application.class, args);
+
 	}
 
 }
